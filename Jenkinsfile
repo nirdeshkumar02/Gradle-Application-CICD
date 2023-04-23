@@ -36,18 +36,11 @@ pipeline{
                 }
             }
         }
-        stage("Build Docker Image and Push to Nexus: Docker"){
+        stage("Build Docker Image"){
             // SetUp Nexus Repo to Docker to push image to nexus
             steps{
                 script{
-                    withCredentials([usernamePassword(credentialsId: 'nexus_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                             sh """
-                                sudo docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} .
-                                sudo docker login -u ${USERNAME} -p ${PASSWORD} ${params.NexusIp}:${params.NexusRepoPort}
-                                sudo docker push ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
-                                sudo docker rmi ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
-                            """
-                    }
+                    sh "docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} ."
                 }
             }
         }
