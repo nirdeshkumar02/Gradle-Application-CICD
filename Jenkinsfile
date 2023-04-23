@@ -42,10 +42,10 @@ pipeline{
                 script{
                     withCredentials([usernamePassword(credentialsId: 'nexus_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                              sh """
-                                docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} .
-                                docker login -u ${USERNAME} -p ${PASSWORD} ${params.NexusIp}:${params.NexusRepoPort}
-                                docker push ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
-                                docker rmi ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
+                                sudo docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} .
+                                sudo docker login -u ${USERNAME} -p ${PASSWORD} ${params.NexusIp}:${params.NexusRepoPort}
+                                sudo docker push ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
+                                sudo docker rmi ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
                             """
                     }
                 }
