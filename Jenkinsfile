@@ -44,7 +44,7 @@ pipeline{
                              sh """
                                 docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} .
                                 docker login -u ${USERNAME} -p ${PASSWORD} ${params.NexusIp}:${params.NexusRepoPort}
-                                docker push  ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
+                                docker push ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
                                 docker rmi ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
                             """
                     }
