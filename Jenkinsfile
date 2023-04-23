@@ -41,12 +41,12 @@ pipeline{
             steps{
                 script{
                     withCredentials([usernamePassword(credentialsId: 'nexus_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                             sh '''
+                             sh """
                                 docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} .
                                 docker login -u ${USERNAME} -p ${PASSWORD} ${params.NexusIp}:${params.NexusRepoPort}
                                 docker push  ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
                                 docker rmi ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}
-                            '''
+                            """
                     }
                 }
             }
