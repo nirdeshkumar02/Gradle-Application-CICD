@@ -40,6 +40,7 @@ pipeline{
             // SetUp Nexus Repo to Docker to push image to nexus
             steps{
                 script{
+                    sh "chmod 777 /var/run/docker.sock"
                     sh "docker build -t ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION} ."
                 }
             }
