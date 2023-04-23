@@ -44,5 +44,16 @@ pipeline{
                 }
             }
         }
+        stage("Push Image to Nexus"){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'nexus_creds', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh "docker login -u ${USER} -p ${PASS} ${params.NexusIp}:${params.NexusRepoPort}"
+                    }
+                        sh "docker push ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}"
+                        sh "docker rmi ${params.NexusIp}:${params.NexusRepoPort}/${params.AppName}:${VERSION}"
+                }
+            }
+        }
     }
 }
