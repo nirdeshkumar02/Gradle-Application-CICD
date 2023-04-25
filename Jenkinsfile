@@ -3,7 +3,9 @@ pipeline{
 
     parameters{
         string(name: 'NexusIp', description: "Provide your public ip of nexus, it will be use for docker", defaultValue: '18.233.162.34')
+        string(name: 'NexusPort', description: "Provide your port of nexus", defaultValue: '8081')
         string(name: 'NexusRepoPort', description: "Provide your port of docker-nexus-repo, it will be use for docker", defaultValue: '8083')
+        string(name: 'NexusHelmRepoName', description: "Provide name to your helm nexus repo", defaultValue: 'helm-hosted')
         string(name: 'AppName', description: "Provide a name to your application", defaultValue: 'gradle-app')
     }
 
@@ -64,8 +66,25 @@ pipeline{
         }
         stage("Helm Charts Misconfig Identification: Datree"){
             steps{
-                dir('kubernetes'){
-                        sh 'helm datree test myapp/'
+                dir('kubernetes/') {
+                    withEnv(['DATREE_TOKEN=GJdx2cP2TCDyUY3EhQKgTc']) {
+                            sh 'helm datree test myapp/'
+                    }
+                }
+            }
+        }
+        stage("Push Helm Charts to Nexus: Nexus"){
+            steps{
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'nexus_creds', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                          dir('kubernetes/') {
+                             sh """
+                                 helmversion=$( helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
+                                 tar -czvf  myapp-${helmversion}.tgz myapp/
+                                 curl -u ${USER}:${PASS} http://${params.NexusIp}:${params.NexusPort}/repository/${NexusHelmRepoName}/ --upload-file myapp-${helmversion}.tgz -v
+                            """
+                          }
+                    }
                 }
             }
         }
