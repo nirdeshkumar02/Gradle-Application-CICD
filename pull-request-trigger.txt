@@ -1,0 +1,13 @@
+Highlight:
+===========
+Whenever we create another branch for development from a main/master branch and after all development work; we create a pull request from
+"dev branch" to "main/master branch".
+
+Then that time, we want to run a trigger to jenkins; so that we can check the new feature in real time and after all new feature verification in real time;
+put jenkins status back to github and merge dev branch with main branch. 
+
+After Merging to main/master branch; A full fledged pipeline should be trigger.
+
+================================================================
+
+Follow the wiki folder for all.
